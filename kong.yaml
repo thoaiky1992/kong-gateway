@@ -1,0 +1,137 @@
+_format_version: "3.0"
+consumers:
+- keyauth_credentials:
+  - key: ky
+  username: api-key
+plugins:
+- config:
+    anonymous: null
+    hide_credentials: false
+    key_in_body: false
+    key_in_header: true
+    key_in_query: true
+    key_names:
+    - api-key
+    realm: null
+    run_on_preflight: true
+  enabled: true
+  instance_name: User-Service
+  name: key-auth
+  protocols:
+  - grpc
+  - grpcs
+  - http
+  - https
+  route: Post-Route
+  service: Post-Gateway-service
+- config:
+    anonymous: null
+    hide_credentials: false
+    key_in_body: false
+    key_in_header: true
+    key_in_query: true
+    key_names:
+    - api-key
+    realm: null
+    run_on_preflight: true
+  enabled: true
+  instance_name: Post-Service
+  name: key-auth
+  protocols:
+  - grpc
+  - grpcs
+  - http
+  - https
+  route: User-Route
+  service: User-Gateway-Service
+- config:
+    day: null
+    error_code: 429
+    error_message: API rate limit exceeded
+    fault_tolerant: true
+    header_name: null
+    hide_client_headers: false
+    hour: null
+    limit_by: consumer
+    minute: 10
+    month: null
+    path: null
+    policy: local
+    redis:
+      database: 0
+      host: null
+      password: null
+      port: 6379
+      server_name: null
+      ssl: false
+      ssl_verify: false
+      timeout: 2000
+      username: null
+    redis_database: 0
+    redis_host: null
+    redis_password: null
+    redis_port: 6379
+    redis_server_name: null
+    redis_ssl: false
+    redis_ssl_verify: false
+    redis_timeout: 2000
+    redis_username: null
+    second: null
+    sync_rate: -1
+    year: null
+  enabled: true
+  name: rate-limiting
+  protocols:
+  - grpc
+  - grpcs
+  - http
+  - https
+services:
+- connect_timeout: 60000
+  enabled: true
+  host: post-api
+  name: Post-Gateway-service
+  path: /api
+  port: 3001
+  protocol: http
+  read_timeout: 60000
+  retries: 5
+  routes:
+  - https_redirect_status_code: 426
+    name: Post-Route
+    path_handling: v0
+    paths:
+    - /post-service
+    preserve_host: false
+    protocols:
+    - http
+    - https
+    regex_priority: 0
+    request_buffering: true
+    response_buffering: true
+    strip_path: true
+  write_timeout: 60000
+- connect_timeout: 60000
+  enabled: true
+  host: user-api
+  name: User-Gateway-Service
+  path: /api
+  port: 3000
+  protocol: http
+  read_timeout: 60000
+  retries: 5
+  routes:
+  - https_redirect_status_code: 426
+    name: User-Route
+    path_handling: v0
+    paths:
+    - /user-service
+    preserve_host: false
+    protocols:
+    - http
+    - https
+    regex_priority: 0
+    request_buffering: true
+    response_buffering: true
+    strip_path: true
+  write_timeout: 60000

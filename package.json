@@ -1,0 +1,19 @@
+{
+  "name": "kong-api",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "post-service.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "user-service": "node user-service.js",
+    "post-service": "node post-service.js",
+    "start": "concurrently \"npm run user-service\" \"npm run post-service\""
+  },
+  "dependencies": {
+    "dotenv": "^18.0.8",
+    "express": "^5.3.0"
+  }
+}
